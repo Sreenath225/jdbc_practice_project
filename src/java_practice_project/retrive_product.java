@@ -11,7 +11,7 @@ Java program to fetch data from the 'products' table:
 package task;
 import java.sql.*;
 
-public class FetchProductsData {
+public class retrive_product {
 public static void main(String[] args) throws ClassNotFoundException, SQLException {
 String dbUrl = "jdbc:mysql://localhost:3306/ecommerce";
 //connection string
