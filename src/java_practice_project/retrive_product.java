@@ -1,67 +1,42 @@
-package java_practice_project;
+CREATE TABLE products ( product_id INT PRIMARY KEY, product_name VARCHAR(100), product_price DECIMAL(10, 2)
+);
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.ResultSet;
+INSERT INTO products (product_id, product_name, product_price) VALUES
+(1, 'Product A', 10.99),
+(2, 'Product B', 19.99),
+(3, 'Product C', 5.99),
+(4, 'Product D', 15.49);
 
-import com.simplilearn.webapp.DB.DataBaseConnection;
-@WebServlet("/retrieve-product")
-public class retrirve_product extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+Java program to fetch data from the 'products' table:
+package task;
+import java.sql.*;
 
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		response.sendRedirect("retrieve-product.jsp");
-		
-	}
+public class FetchProductsData {
+public static void main(String[] args) throws ClassNotFoundException, SQLException {
+String dbUrl = "jdbc:mysql://localhost:3306/ecommerce";
+//connection string
+String username="root"; String password = "root";
+String query = "select * from product;"; Connection con = null;
 
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		
-		
-		String productId = request.getParameter("product-id");
-		
-		DataBaseConnection db = null;
-		
-		try {
-			
-			db = new DataBaseConnection();
-			db.init();
-			
-			
-			String query = "SELECT * from eproducts where product_id="+productId+";";
-            ResultSet rst = db.executeQuery(query);
-			
-			request.getRequestDispatcher("index.jsp").include(request, response);
-			
-			out.print("<div style='text-align:center;border:2px solid green; padding:20px;'>");
-			while (rst.next()) {
-				out.print("<div style=text-align:center;border:2px solid black; padding:5px; margin: auto 20%>");
-				out.print("<p>" + rst.getInt("product_id") + "  ,  "+ rst.getString("product_name") + 
-						"  ,  " + rst.getString("product_desc") +"  ,  "+rst.getDouble("price"));
-				out.print("</div>");
-			}
-			out.print("</div>");
-		} catch (Exception e) {
-			 e.printStackTrace();
-			out.println("<h2> Exception Occured </h2>");
-		} finally {
-			out.close();
-			db.close();
-		}
-		}
-	}
+try {
+Class.forName("com.mysql.cj.jdbc.Driver");
+con = DriverManager.getConnection(dbUrl, username,
+password); //connecting DB
+Statement stmt = con.createStatement(); //Execute the query ResultSet rs = (stmt).executeQuery(query); //Save the
+result after executing the query
 
+while (rs.next()) {
+System.out.print("product_ID: " + rs.getString("product_ID") + "\t");
+System.out.print("product_Name: " +
+rs.getString("product_name") + "\t\t" );
+System.out.println("product_Price: " + rs.getString("product_Price")+ "\t");
+}
+}
+catch(Exception e) { System.out.println(e.getMessage());
+}
 
-	
-
-
-
+finally {
+con.close();
+}
+}
+}
